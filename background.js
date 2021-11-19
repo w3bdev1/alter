@@ -43,7 +43,7 @@ function redirect(requestDetails) {
 
 function setToLocalStorage(object) {
     function setItem() {
-        console.log("OK");
+        console.log("Saved to Local Storage");
     }
     function onError(error) {
         console.log(error)
@@ -52,11 +52,14 @@ function setToLocalStorage(object) {
     browser.storage.local.set(object).then(setItem, onError);
 }
 
-function getFromLocalStorage(key) {
-    let returnValue = ''
-    browser.storage.local.get(key).then(res => returnValue = Object.values(res)[0])
+function getInstancesFromLocalStorage() {
+	// const domains = ["nitter", "teddit", "invidious"]
+	// const instancesObj = []
+	// domains.forEach(key => {
+	// 	browser.storage.local.get(key).then(res => instancesObj.push(Object.values(res)[0]))
+	// })
 
-    return returnValue
+    // return Promise.all(instancesObj)
 }
 
 function updateCurrentInstances() {
@@ -77,10 +80,16 @@ function updateCurrentInstances() {
     })
 }
 
-function handleMessage(message) {
-        console.log("From bg: ", message)
-        setToLocalStorage(message)
-        updateCurrentInstances()
+function handleMessage(message, sender, sendResponse) {
+	if (message.type === "bg_update_instances") {
+		setToLocalStorage(message.instancesSelected)
+		updateCurrentInstances()
+		sendResponse("Instances Updated")
+	}
+
+	if (message.type === "bg_get_instances") {
+        sendResponse('Dummy Data')
+	}
 }
 
 updateCurrentInstances();

@@ -15,20 +15,26 @@ function createOption(value) {
     return optionCreated
 }
 
-instances.nitter.forEach(ins => {
-    let option = createOption(ins)
-    nitterEl.appendChild(option)
-})
+browser.runtime.sendMessage({ type: "bg_get_instances" })
+	.then(msgFromBg => {
+		console.log(msgFromBg)
 
-instances.teddit.forEach(ins => {
-    let option = createOption(ins)
-    tedditEl.appendChild(option)
-})
+		instances.nitter.forEach(ins => {
+			let option = createOption(ins)
+			nitterEl.appendChild(option)
+		})
 
-instances.invidious.forEach(ins => {
-    let option = createOption(ins)
-    invidiousEl.appendChild(option)
-})
+		instances.teddit.forEach(ins => {
+			let option = createOption(ins)
+			tedditEl.appendChild(option)
+		})
+
+		instances.invidious.forEach(ins => {
+			let option = createOption(ins)
+			invidiousEl.appendChild(option)
+		})
+
+	}, error => {console.log(error)})
 
 document.forms[0].onsubmit = (e) => {
     e.preventDefault();
@@ -38,6 +44,17 @@ document.forms[0].onsubmit = (e) => {
         invidious: invidiousEl.value
     }
 
-    browser.runtime.sendMessage(instancesSelected)
-    window.close()
+	const sending = browser.runtime.sendMessage(
+		{
+			type: "bg_update_instances",
+			instancesSelected
+		}
+	)
+
+	sending.then((msgFromBg) => {
+		console.log(msgFromBg)
+		window.close()
+	}, (error) => {
+		console.log(error)
+	})
 }

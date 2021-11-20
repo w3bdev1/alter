@@ -52,16 +52,6 @@ function setToLocalStorage(object) {
     browser.storage.local.set(object).then(setItem, onError);
 }
 
-function getInstancesFromLocalStorage() {
-	// const domains = ["nitter", "teddit", "invidious"]
-	// const instancesObj = []
-	// domains.forEach(key => {
-	// 	browser.storage.local.get(key).then(res => instancesObj.push(Object.values(res)[0]))
-	// })
-
-    // return Promise.all(instancesObj)
-}
-
 function updateCurrentInstances() {
     browser.storage.local.get("nitter").then(res => {
         if (Object.values(res)[0]){
@@ -88,7 +78,7 @@ function handleMessage(message, sender, sendResponse) {
 	}
 
 	if (message.type === "bg_get_instances") {
-        sendResponse('Dummy Data')
+        sendResponse(Promise.resolve(browser.storage.local.get()))
 	}
 }
 

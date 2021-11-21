@@ -8,8 +8,12 @@ let currentInstances = {
     invidious: 'yewtu.be'
 }
 
+function replaceUrl(url, regex, newDomain) {
+	return url.replace(regex, `$1://${newDomain}/$3`)
+}
+
 function redirect(requestDetails) {
-    originalUrl = requestDetails.url;
+    const originalUrl = requestDetails.url;
     console.log("Redirecting " + originalUrl)
     
     const twitterRegex = /(.*):\/\/(twitter.com)\/(.*)/
@@ -18,56 +22,41 @@ function redirect(requestDetails) {
     
     // Twitter -> Nitter
     if (twitterRegex.test(originalUrl)) {
-        newUrl = originalUrl.replace(twitterRegex, `$1://${currentInstances.nitter}/$3`)
-
+        const newUrl = replaceUrl(originalUrl, twitterRegex, currentInstances.nitter)
         console.log('New URL ', newUrl)
         return { redirectUrl: newUrl }
     }
 
     // Reddit -> Teddit
     if (redditRegex.test(originalUrl)) {
-        newUrl = originalUrl.replace(redditRegex, `$1://${currentInstances.teddit}/$3`)
-
+        const newUrl = replaceUrl(originalUrl, redditRegex, currentInstances.teddit)
+        // newUrl = originalUrl.replace(redditRegex, `$1://${currentInstances.teddit}/$3`)
         console.log('New URL ', newUrl)
         return { redirectUrl: newUrl }
     }
 
     // YouTube -> Invidious
         if (youtubeRegex.test(originalUrl)) {
-        newUrl = originalUrl.replace(youtubeRegex, `$1://${currentInstances.invidious}/$3`)
-
+        const newUrl = replaceUrl(originalUrl, youtubeRegex, currentInstances.invidious)
         console.log('New URL ', newUrl)
         return { redirectUrl: newUrl }
     }
 }
 
 function setToLocalStorage(object) {
-    function setItem() {
-        console.log("Saved to Local Storage");
-    }
-    function onError(error) {
-        console.log(error)
-    }
-
-    browser.storage.local.set(object).then(setItem, onError);
+	browser.storage.local.set(object).then(() => console.log("Saved to Local Storage"), err => console.log(err))
 }
 
 function updateCurrentInstances() {
-    browser.storage.local.get("nitter").then(res => {
-        if (Object.values(res)[0]){
-            currentInstances.nitter = Object.values(res)[0]
-        }
-    })
-    browser.storage.local.get("teddit").then(res => {
-        if (Object.values(res)[0]){
-            currentInstances.teddit = Object.values(res)[0]
-        }
-    })
-    browser.storage.local.get("invidious").then(res => {
-        if (Object.values(res)[0]){
-            currentInstances.invidious = Object.values(res)[0]
-        }
-    })
+	browser.storage.local.get()
+		.then(res => { 
+			if (Object.keys(res).length !== 0) {
+				console.log('Current', res)
+				currentInstances = res
+			} else {
+				console.log('Local storage is empty', res)
+			}
+		}, err => console.log(err))
 }
 
 function handleMessage(message, sender, sendResponse) {

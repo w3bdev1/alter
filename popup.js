@@ -21,18 +21,17 @@ function createOption(value, isSelected = false) {
 browser.runtime.sendMessage({ type: "bg_get_instances" })
 	.then(msgFromBg => {
 		instances.nitter.forEach(ins => {
-			let option = createOption(ins, msgFromBg.nitter === ins)
-			console.log(ins, msgFromBg.nitter === ins)
+			const option = createOption(ins, msgFromBg.nitter === ins)
 			nitterEl.appendChild(option)
 		})
 
 		instances.teddit.forEach(ins => {
-			let option = createOption(ins, msgFromBg.teddit === ins)
+			const option = createOption(ins, msgFromBg.teddit === ins)
 			tedditEl.appendChild(option)
 		})
 
 		instances.invidious.forEach(ins => {
-			let option = createOption(ins, msgFromBg.invidious === ins)
+			const option = createOption(ins, msgFromBg.invidious === ins)
 			invidiousEl.appendChild(option)
 		})
 

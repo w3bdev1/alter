@@ -2,6 +2,17 @@ const twitterUrls = ["*://twitter.com/*"]
 const redditUrls = ["*://reddit.com/*","*://www.reddit.com/*"]
 const youtubeUrls = ["*://youtube.com/*","*://m.youtube.com/*", "*://www.youtube.com/*" ,"*://youtu.be/*"]
 
+const allInstances = {
+    nitter: ['nitter.net', 'nitter.pussthecat.org',  'nitter.kavin.rocks', 'nitter.eu'],
+    teddit: ['teddit.net', 'teddit.ggc-project.de', 'teddit.kavin.rocks'],
+    invidious: ['invidious.snopyta.org', 'yewtu.be']
+}
+
+let allInstancesArray = []
+Object.values(allInstances).forEach(instances => {
+	instances.forEach(instance => allInstancesArray.push(`*://${instance}/*`))
+})
+
 let currentInstances = {
     nitter: 'nitter.net',
     teddit: 'teddit.net',
@@ -12,13 +23,22 @@ function replaceUrl(url, regex, newDomain) {
 	return url.replace(regex, `$1://${newDomain}/$3`)
 }
 
+function getDomain(url) {
+	if (url) {
+		return url.replace(/https?:\/\/([^\/]*).*/, '$1')
+	} else {
+		return null
+	}
+}
+
 function redirect(requestDetails) {
-    const originalUrl = requestDetails.url;
-    console.log("Redirecting " + originalUrl)
+    const originalUrl = requestDetails.url
+	const originalDomain = getDomain(originalUrl)
+	const urlOriginDomain = getDomain(requestDetails.originUrl)
     
-    const twitterRegex = /(.*):\/\/(twitter.com)\/(.*)/
-    const redditRegex = /(.*):\/\/(reddit.com|www.reddit.com)\/(.*)/
-    const youtubeRegex = /(.*):\/\/(youtube.com|m.youtube.com|www.youtube.com|youtu.be)\/(.*)/
+    const twitterRegex = /(https?):\/\/(twitter.com)\/(.*)/
+    const redditRegex = /(https?):\/\/(reddit.com|www.reddit.com)\/(.*)/
+    const youtubeRegex = /(https?):\/\/(youtube.com|m.youtube.com|www.youtube.com|youtu.be)\/(.*)/
     
     // Twitter -> Nitter
     if (twitterRegex.test(originalUrl)) {
@@ -41,6 +61,24 @@ function redirect(requestDetails) {
         console.log('New URL ', newUrl)
         return { redirectUrl: newUrl }
     }
+
+	// Other Instance -> Current Instance
+	if (
+		allInstancesArray.findIndex(instance => instance.includes(originalDomain)) > -1 &&
+		!Object.values(currentInstances).includes(originalDomain)
+	) {
+		let instanceKey = '';
+		for (const [k,v] of Object.entries(allInstances)) {
+			if (v.includes(originalDomain)) {
+				instanceKey = k
+			}
+		}
+
+		const newUrl = originalUrl.replace(/(https?:\/\/)([^\/]*)(.*)/, `$1${currentInstances[instanceKey]}$3`)
+
+        console.log('New URL ', newUrl)
+        return { redirectUrl: newUrl }
+	}
 }
 
 function setToLocalStorage(object) {
@@ -67,7 +105,7 @@ function handleMessage(message, sender, sendResponse) {
 	}
 
 	if (message.type === "bg_get_instances") {
-        sendResponse(Promise.resolve(browser.storage.local.get()))
+        sendResponse(currentInstances)
 	}
 }
 
@@ -77,6 +115,6 @@ browser.runtime.onMessage.addListener(handleMessage)
 
 browser.webRequest.onBeforeRequest.addListener(
     redirect,
-    {urls: [...twitterUrls, ...redditUrls, ...youtubeUrls]},
+    {urls: [...twitterUrls, ...redditUrls, ...youtubeUrls, ...allInstancesArray]},
     ["blocking"]
 );

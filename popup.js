@@ -20,6 +20,8 @@ function createOption(value, isSelected = false) {
 
 browser.runtime.sendMessage({ type: "bg_get_instances" })
 	.then(msgFromBg => {
+		console.log(msgFromBg)
+
 		instances.nitter.forEach(ins => {
 			const option = createOption(ins, msgFromBg.nitter === ins)
 			nitterEl.appendChild(option)

@@ -1,5 +1,5 @@
 const instances = {
-    nitter: ['nitter.net', 'nitter.pussthecat.org', 'nitter.eu'],
+    nitter: ['nitter.net', 'nitter.pussthecat.org',  'nitter.kavin.rocks', 'nitter.eu'],
     teddit: ['teddit.net', 'teddit.ggc-project.de', 'teddit.kavin.rocks'],
     invidious: ['invidious.snopyta.org', 'yewtu.be']
 }

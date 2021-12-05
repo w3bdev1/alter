@@ -105,7 +105,10 @@ function handleMessage(message, sender, sendResponse) {
 	}
 
 	if (message.type === "bg_get_instances") {
-        sendResponse(currentInstances)
+        sendResponse({
+			allInstances,
+			currentInstances
+		})
 	}
 }
 

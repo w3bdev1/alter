@@ -1,9 +1,3 @@
-const instances = {
-    nitter: ['nitter.net', 'nitter.pussthecat.org',  'nitter.kavin.rocks', 'nitter.eu'],
-    teddit: ['teddit.net', 'teddit.ggc-project.de', 'teddit.kavin.rocks'],
-    invidious: ['invidious.snopyta.org', 'yewtu.be']
-}
-
 const nitterEl = document.getElementById('nitter-instances')
 const tedditEl = document.getElementById('teddit-instances')
 const invidiousEl = document.getElementById('invidious-instances')
@@ -20,20 +14,21 @@ function createOption(value, isSelected = false) {
 
 browser.runtime.sendMessage({ type: "bg_get_instances" })
 	.then(msgFromBg => {
-		console.log(msgFromBg)
+		const instances = msgFromBg.allInstances
+		const currentInstances = msgFromBg.currentInstances
 
 		instances.nitter.forEach(ins => {
-			const option = createOption(ins, msgFromBg.nitter === ins)
+			const option = createOption(ins, currentInstances.nitter === ins)
 			nitterEl.appendChild(option)
 		})
 
 		instances.teddit.forEach(ins => {
-			const option = createOption(ins, msgFromBg.teddit === ins)
+			const option = createOption(ins, currentInstances.teddit === ins)
 			tedditEl.appendChild(option)
 		})
 
 		instances.invidious.forEach(ins => {
-			const option = createOption(ins, msgFromBg.invidious === ins)
+			const option = createOption(ins, currentInstances.invidious === ins)
 			invidiousEl.appendChild(option)
 		})
 
@@ -55,7 +50,6 @@ document.forms[0].onsubmit = (e) => {
 	)
 
 	sending.then((msgFromBg) => {
-		console.log(msgFromBg)
 		window.close()
 	}, (error) => {
 		console.log(error)

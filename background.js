@@ -1,11 +1,13 @@
 const twitterUrls = ["*://twitter.com/*"]
 const redditUrls = ["*://reddit.com/*","*://www.reddit.com/*"]
 const youtubeUrls = ["*://youtube.com/*","*://m.youtube.com/*", "*://www.youtube.com/*" ,"*://youtu.be/*"]
+const mediumUrls = ['*://medium.com/*', '*://*.medium.com/*']
 
 const allInstances = {
     nitter: ['nitter.net', 'nitter.pussthecat.org',  'nitter.kavin.rocks', 'nitter.eu'],
     teddit: ['teddit.net', 'teddit.ggc-project.de', 'teddit.kavin.rocks'],
-    invidious: ['invidious.snopyta.org', 'yewtu.be']
+    invidious: ['invidious.snopyta.org', 'yewtu.be'],
+	scribe: ['scribe.rip', 'scribe.nixnet.services', 'scribe.citizen4.eu']
 }
 
 let allInstancesArray = []
@@ -16,7 +18,8 @@ Object.values(allInstances).forEach(instances => {
 let currentInstances = {
     nitter: 'nitter.net',
     teddit: 'teddit.net',
-    invidious: 'yewtu.be'
+    invidious: 'yewtu.be',
+	scribe: 'scribe.rip'
 }
 
 function replaceUrl(url, regex, newDomain) {
@@ -33,12 +36,12 @@ function getDomain(url) {
 
 function redirect(requestDetails) {
     const originalUrl = requestDetails.url
-	const originalDomain = getDomain(originalUrl)
-	const urlOriginDomain = getDomain(requestDetails.originUrl)
+    const originalDomain = getDomain(originalUrl)
     
     const twitterRegex = /(https?):\/\/(twitter.com)\/(.*)/
     const redditRegex = /(https?):\/\/(reddit.com|www.reddit.com)\/(.*)/
     const youtubeRegex = /(https?):\/\/(youtube.com|m.youtube.com|www.youtube.com|youtu.be)\/(.*)/
+    const mediumRegex = /https?:\/\/(?:.*\.)*(?<!link\.)medium\.com(\/.*)?$/
     
     // Twitter -> Nitter
     if (twitterRegex.test(originalUrl)) {
@@ -56,29 +59,36 @@ function redirect(requestDetails) {
     }
 
     // YouTube -> Invidious
-        if (youtubeRegex.test(originalUrl)) {
-        const newUrl = replaceUrl(originalUrl, youtubeRegex, currentInstances.invidious)
-        console.log('New URL ', newUrl)
-        return { redirectUrl: newUrl }
+    if (youtubeRegex.test(originalUrl)) {
+    	const newUrl = replaceUrl(originalUrl, youtubeRegex, currentInstances.invidious)
+    	console.log('New URL ', newUrl)
+    	return { redirectUrl: newUrl }
     }
 
-	// Other Instance -> Current Instance
-	if (
-		allInstancesArray.findIndex(instance => instance.includes(originalDomain)) > -1 &&
-		!Object.values(currentInstances).includes(originalDomain)
-	) {
-		let instanceKey = '';
-		for (const [k,v] of Object.entries(allInstances)) {
-			if (v.includes(originalDomain)) {
-				instanceKey = k
-			}
-		}
+    // Medium → Scribe
+    if (mediumRegex.test(originalUrl)) {
+    	const newUrl = originalUrl.replace(mediumRegex, `https://${currentInstances.scribe}$1`)
+    	console.log('New URL ', newUrl)
+    	return { redirectUrl: newUrl }
+    }
 
-		const newUrl = originalUrl.replace(/(https?:\/\/)([^\/]*)(.*)/, `$1${currentInstances[instanceKey]}$3`)
+    // Other Instance -> Current Instance
+    if (
+    	allInstancesArray.findIndex(instance => instance.includes(originalDomain)) > -1 &&
+    	!Object.values(currentInstances).includes(originalDomain)
+    ) {
+    	let instanceKey = '';
+    	for (const [k,v] of Object.entries(allInstances)) {
+    		if (v.includes(originalDomain)) {
+    			instanceKey = k
+    		}
+    	}
 
-        console.log('New URL ', newUrl)
-        return { redirectUrl: newUrl }
-	}
+    	const newUrl = originalUrl.replace(/(https?:\/\/)([^\/]*)(.*)/, `$1${currentInstances[instanceKey]}$3`)
+
+    	console.log('New URL ', newUrl)
+    	return { redirectUrl: newUrl }
+    }
 }
 
 function setToLocalStorage(object) {
@@ -118,6 +128,6 @@ browser.runtime.onMessage.addListener(handleMessage)
 
 browser.webRequest.onBeforeRequest.addListener(
     redirect,
-    {urls: [...twitterUrls, ...redditUrls, ...youtubeUrls, ...allInstancesArray]},
+    {urls: [...twitterUrls, ...redditUrls, ...youtubeUrls, ...mediumUrls, ...allInstancesArray]},
     ["blocking"]
 );

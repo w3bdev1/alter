@@ -1,6 +1,7 @@
 const nitterEl = document.getElementById('nitter-instances')
 const tedditEl = document.getElementById('teddit-instances')
 const invidiousEl = document.getElementById('invidious-instances')
+const scribeEl = document.getElementById('scribe-instances')
 
 function createOption(value, isSelected = false) {
     let optionCreated = document.createElement('option')
@@ -32,6 +33,11 @@ browser.runtime.sendMessage({ type: "bg_get_instances" })
 			invidiousEl.appendChild(option)
 		})
 
+		instances.scribe.forEach(ins => {
+			const option = createOption(ins, currentInstances.scribe === ins)
+			scribeEl.appendChild(option)
+		})
+
 	}, error => {console.log(error)})
 
 document.forms[0].onsubmit = (e) => {
@@ -39,7 +45,8 @@ document.forms[0].onsubmit = (e) => {
     const instancesSelected = { 
         nitter: nitterEl.value,
         teddit: tedditEl.value,
-        invidious: invidiousEl.value
+        invidious: invidiousEl.value,
+		scribe: scribeEl.value
     }
 
 	const sending = browser.runtime.sendMessage(

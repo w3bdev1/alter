@@ -17,3 +17,7 @@
 *Sometimes it is stuck and do not redirect. What to do?*
 - The Alter icon provides you the option to change redirect instances.
 - In this case you need to change instance to a different one.
+
+*After update, some redirections are showing undefined. What to do?*
+- When new redirection feature is added, no instance is saved for the new feature. So alter does not know where to redirect.
+- Click on the Alter icon and submit the form once. You'll be good to go.

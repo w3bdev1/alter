@@ -21,3 +21,7 @@
 *After update, some redirections are showing undefined. What to do?*
 - When new redirection feature is added, no instance is saved for the new feature. So alter does not know where to redirect.
 - Click on the Alter icon and submit the form once. You'll be good to go.
+
+### Support Me
+- If you find my work useful, consider donating so that I can continue to contribute.
+- You can donate by [buying me a cup of coffee](https://www.buymeacoffee.com/w3bdev).

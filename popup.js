@@ -1,64 +1,75 @@
-const nitterEl = document.getElementById('nitter-instances')
-const tedditEl = document.getElementById('teddit-instances')
-const invidiousEl = document.getElementById('invidious-instances')
-const scribeEl = document.getElementById('scribe-instances')
+const nitterEl = document.getElementById("nitter-instances");
+const tedditEl = document.getElementById("teddit-instances");
+const invidiousEl = document.getElementById("invidious-instances");
+const scribeEl = document.getElementById("scribe-instances");
+const bibliogramEl = document.getElementById("bibliogram-instances");
 
 function createOption(value, isSelected = false) {
-    let optionCreated = document.createElement('option')
-    optionCreated.setAttribute('value', value)
-	if (isSelected === true) {
-		optionCreated.setAttribute('selected', 'selected')
-	}
-    optionCreated.innerText = value
-    return optionCreated
+  let optionCreated = document.createElement("option");
+  optionCreated.setAttribute("value", value);
+  if (isSelected === true) {
+    optionCreated.setAttribute("selected", "selected");
+  }
+  optionCreated.innerText = value;
+  return optionCreated;
 }
 
-browser.runtime.sendMessage({ type: "bg_get_instances" })
-	.then(msgFromBg => {
-		const instances = msgFromBg.allInstances
-		const currentInstances = msgFromBg.currentInstances
+browser.runtime.sendMessage({ type: "bg_get_instances" }).then(
+  (msgFromBg) => {
+    const instances = msgFromBg.allInstances;
+    const currentInstances = msgFromBg.currentInstances;
 
-		instances.nitter.forEach(ins => {
-			const option = createOption(ins, currentInstances.nitter === ins)
-			nitterEl.appendChild(option)
-		})
+    instances.nitter.forEach((ins) => {
+      const option = createOption(ins, currentInstances.nitter === ins);
+      nitterEl.appendChild(option);
+    });
 
-		instances.teddit.forEach(ins => {
-			const option = createOption(ins, currentInstances.teddit === ins)
-			tedditEl.appendChild(option)
-		})
+    instances.teddit.forEach((ins) => {
+      const option = createOption(ins, currentInstances.teddit === ins);
+      tedditEl.appendChild(option);
+    });
 
-		instances.invidious.forEach(ins => {
-			const option = createOption(ins, currentInstances.invidious === ins)
-			invidiousEl.appendChild(option)
-		})
+    instances.invidious.forEach((ins) => {
+      const option = createOption(ins, currentInstances.invidious === ins);
+      invidiousEl.appendChild(option);
+    });
 
-		instances.scribe.forEach(ins => {
-			const option = createOption(ins, currentInstances.scribe === ins)
-			scribeEl.appendChild(option)
-		})
+    instances.scribe.forEach((ins) => {
+      const option = createOption(ins, currentInstances.scribe === ins);
+      scribeEl.appendChild(option);
+    });
 
-	}, error => {console.log(error)})
+    instances.bibliogram.forEach((ins) => {
+      const option = createOption(ins, currentInstances.bibliogram === ins);
+      bibliogramEl.appendChild(option);
+    });
+  },
+  (error) => {
+    console.log(error);
+  }
+);
 
 document.forms[0].onsubmit = (e) => {
-    e.preventDefault();
-    const instancesSelected = { 
-        nitter: nitterEl.value,
-        teddit: tedditEl.value,
-        invidious: invidiousEl.value,
-		scribe: scribeEl.value
+  e.preventDefault();
+  const instancesSelected = {
+    nitter: nitterEl.value,
+    teddit: tedditEl.value,
+    invidious: invidiousEl.value,
+    scribe: scribeEl.value,
+    bibliogram: bibliogramEl.value,
+  };
+
+  const sending = browser.runtime.sendMessage({
+    type: "bg_update_instances",
+    instancesSelected,
+  });
+
+  sending.then(
+    () => {
+      window.close();
+    },
+    (error) => {
+      console.log(error);
     }
-
-	const sending = browser.runtime.sendMessage(
-		{
-			type: "bg_update_instances",
-			instancesSelected
-		}
-	)
-
-	sending.then((msgFromBg) => {
-		window.close()
-	}, (error) => {
-		console.log(error)
-	})
-}
+  );
+};

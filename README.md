@@ -1,7 +1,7 @@
 # Alter
 - It is a browser extension, currently available for [Firefox](https://addons.mozilla.org/addon/alter/).
 - Alter tries to redirect you to privacy-friendly alternatives.
-- As of now it redirects YouTube, Twitter, Reddit and Medium links to Invidious, Nitter, Teddit and Scribe respectively.
+- As of now it redirects YouTube, Twitter, Reddit, Instagram and Medium links to Invidious, Nitter, Teddit, Bibliogram and Scribe respectively.
 
 ### How to download
 - Go to https://addons.mozilla.org/addon/alter/

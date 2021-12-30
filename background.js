@@ -42,6 +42,7 @@ let currentInstances = {
   invidious: "yewtu.be",
   scribe: "scribe.rip",
   bibliogram: "bibliogram.art",
+  disable: false,
 };
 
 function replaceUrl(url, regex, newDomain) {
@@ -57,102 +58,106 @@ function getDomain(url) {
 }
 
 function redirect(requestDetails) {
-  const originalUrl = requestDetails.url;
-  const originalDomain = getDomain(originalUrl);
+  if (currentInstances.disable) {
+    return null;
+  } else {
+    const originalUrl = requestDetails.url;
+    const originalDomain = getDomain(originalUrl);
 
-  const twitterRegex = /(https?):\/\/(twitter.com)\/(.*)/;
-  const redditRegex = /(https?):\/\/(reddit.com|www.reddit.com)\/(.*)/;
-  const youtubeRegex =
-    /(https?):\/\/(youtube.com|m.youtube.com|www.youtube.com|youtu.be)\/(.*)/;
-  const mediumRegex = /https?:\/\/(?:.*\.)*(?<!link\.)medium\.com(\/.*)?$/;
-  const instagramPostRegex =
-    /https?:\/\/(www\.)?(instagram.com|instagr.am)\/(p|tv)\/.*/;
-  const instagramRegex = /https?:\/\/(www\.)?(instagram.com|instagr.am)\/.*/; // If not post, treat it as user
+    const twitterRegex = /(https?):\/\/(twitter.com)\/(.*)/;
+    const redditRegex = /(https?):\/\/(reddit.com|www.reddit.com)\/(.*)/;
+    const youtubeRegex =
+      /(https?):\/\/(youtube.com|m.youtube.com|www.youtube.com|youtu.be)\/(.*)/;
+    const mediumRegex = /https?:\/\/(?:.*\.)*(?<!link\.)medium\.com(\/.*)?$/;
+    const instagramPostRegex =
+      /https?:\/\/(www\.)?(instagram.com|instagr.am)\/(p|tv)\/.*/;
+    const instagramRegex = /https?:\/\/(www\.)?(instagram.com|instagr.am)\/.*/; // If not post, treat it as user
 
-  // Twitter -> Nitter
-  if (twitterRegex.test(originalUrl)) {
-    const newUrl = replaceUrl(
-      originalUrl,
-      twitterRegex,
-      currentInstances.nitter
-    );
-    console.log("New URL ", newUrl);
-    return { redirectUrl: newUrl };
-  }
-
-  // Reddit -> Teddit
-  if (redditRegex.test(originalUrl)) {
-    const newUrl = replaceUrl(
-      originalUrl,
-      redditRegex,
-      currentInstances.teddit
-    );
-    // newUrl = originalUrl.replace(redditRegex, `$1://${currentInstances.teddit}/$3`)
-    console.log("New URL ", newUrl);
-    return { redirectUrl: newUrl };
-  }
-
-  // YouTube -> Invidious
-  if (youtubeRegex.test(originalUrl)) {
-    const newUrl = replaceUrl(
-      originalUrl,
-      youtubeRegex,
-      currentInstances.invidious
-    );
-    console.log("New URL ", newUrl);
-    return { redirectUrl: newUrl };
-  }
-
-  // Medium → Scribe
-  if (mediumRegex.test(originalUrl)) {
-    const newUrl = originalUrl.replace(
-      mediumRegex,
-      `https://${currentInstances.scribe}$1`
-    );
-    console.log("New URL ", newUrl);
-    return { redirectUrl: newUrl };
-  }
-
-  // Instagram → Bibliogram
-  if (instagramPostRegex.test(originalUrl)) {
-    const newUrl = originalUrl.replace(
-      /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
-      `https://${currentInstances.bibliogram}`
-    );
-    console.log("New URL ", newUrl);
-    return { redirectUrl: newUrl };
-  }
-
-  if (instagramRegex.test(originalUrl)) {
-    const newUrl = originalUrl.replace(
-      /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
-      `https://${currentInstances.bibliogram}/u`
-    );
-    console.log("New URL ", newUrl);
-    return { redirectUrl: newUrl };
-  }
-
-  // Other Instance -> Current Instance
-  if (
-    allInstancesArray.findIndex((instance) =>
-      instance.includes(originalDomain)
-    ) > -1 &&
-    !Object.values(currentInstances).includes(originalDomain)
-  ) {
-    let instanceKey = "";
-    for (const [k, v] of Object.entries(allInstances)) {
-      if (v.includes(originalDomain)) {
-        instanceKey = k;
-      }
+    // Twitter -> Nitter
+    if (twitterRegex.test(originalUrl)) {
+      const newUrl = replaceUrl(
+        originalUrl,
+        twitterRegex,
+        currentInstances.nitter
+      );
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
     }
 
-    const newUrl = originalUrl.replace(
-      /(https?:\/\/)([^\/]*)(.*)/,
-      `$1${currentInstances[instanceKey]}$3`
-    );
+    // Reddit -> Teddit
+    if (redditRegex.test(originalUrl)) {
+      const newUrl = replaceUrl(
+        originalUrl,
+        redditRegex,
+        currentInstances.teddit
+      );
+      // newUrl = originalUrl.replace(redditRegex, `$1://${currentInstances.teddit}/$3`)
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
+    }
 
-    console.log("New URL ", newUrl);
-    return { redirectUrl: newUrl };
+    // YouTube -> Invidious
+    if (youtubeRegex.test(originalUrl)) {
+      const newUrl = replaceUrl(
+        originalUrl,
+        youtubeRegex,
+        currentInstances.invidious
+      );
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
+    }
+
+    // Medium → Scribe
+    if (mediumRegex.test(originalUrl)) {
+      const newUrl = originalUrl.replace(
+        mediumRegex,
+        `https://${currentInstances.scribe}$1`
+      );
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
+    }
+
+    // Instagram → Bibliogram
+    if (instagramPostRegex.test(originalUrl)) {
+      const newUrl = originalUrl.replace(
+        /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
+        `https://${currentInstances.bibliogram}`
+      );
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
+    }
+
+    if (instagramRegex.test(originalUrl)) {
+      const newUrl = originalUrl.replace(
+        /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
+        `https://${currentInstances.bibliogram}/u`
+      );
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
+    }
+
+    // Other Instance -> Current Instance
+    if (
+      allInstancesArray.findIndex((instance) =>
+        instance.includes(originalDomain)
+      ) > -1 &&
+      !Object.values(currentInstances).includes(originalDomain)
+    ) {
+      let instanceKey = "";
+      for (const [k, v] of Object.entries(allInstances)) {
+        if (v.includes(originalDomain)) {
+          instanceKey = k;
+        }
+      }
+
+      const newUrl = originalUrl.replace(
+        /(https?:\/\/)([^\/]*)(.*)/,
+        `$1${currentInstances[instanceKey]}$3`
+      );
+
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
+    }
   }
 }
 

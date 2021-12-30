@@ -4,6 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      button {
+        margin: 1em 0 0 0.2em;
+        padding: 0.4em 0.6em;
+        border: none;
+        background-color: black;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #333;
+      }
+
+      .form-bottom {
+        padding-top: 1em;
+        display: grid;
+        place-items: center;
+      }
+    </style>
   </head>
   <body>
     <form>
@@ -27,18 +48,13 @@
         <legend>Scribe instances</legend>
         <select id="scribe-instances" name="scribe-instances"></select>
       </fieldset>
-      <button
-        type="submit"
-        style="
-          margin: 1em 0 0 0.2em;
-          padding: 0.4em;
-          border: none;
-          background-color: black;
-          color: white;
-        "
-      >
-        Save
-      </button>
+      <div class="form-bottom">
+        <label class="switch">
+          Disable Alter?
+          <input id="disable" type="checkbox" />
+        </label>
+        <button class="submit" type="submit">Save</button>
+      </div>
     </form>
 
     <script defer src="popup.js"></script>

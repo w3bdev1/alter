@@ -3,6 +3,7 @@ const tedditEl = document.getElementById("teddit-instances");
 const invidiousEl = document.getElementById("invidious-instances");
 const scribeEl = document.getElementById("scribe-instances");
 const bibliogramEl = document.getElementById("bibliogram-instances");
+const disable = document.getElementById("disable");
 
 function createOption(value, isSelected = false) {
   let optionCreated = document.createElement("option");
@@ -43,6 +44,7 @@ browser.runtime.sendMessage({ type: "bg_get_instances" }).then(
       const option = createOption(ins, currentInstances.bibliogram === ins);
       bibliogramEl.appendChild(option);
     });
+    disable.checked = currentInstances.disable;
   },
   (error) => {
     console.log(error);
@@ -57,6 +59,7 @@ document.forms[0].onsubmit = (e) => {
     invidious: invidiousEl.value,
     scribe: scribeEl.value,
     bibliogram: bibliogramEl.value,
+    disable: disable.checked,
   };
 
   const sending = browser.runtime.sendMessage({

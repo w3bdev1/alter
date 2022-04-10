@@ -23,5 +23,6 @@
 - Click on the Alter icon and submit the form once. You'll be good to go.
 
 ### Support Me
-- If you find my work useful, consider donating so that I can continue to contribute.
-- You can donate by [buying me a cup of coffee](https://www.buymeacoffee.com/w3bdev).
+If you find my work useful, consider donating so that I can continue to contribute.
+You can donate by [buying me a coffee](https://www.buymeacoffee.com/w3bdev).
+<a href="https://www.buymeacoffee.com/w3bdev" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>

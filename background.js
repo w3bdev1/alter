@@ -212,6 +212,7 @@ browser.webRequest.onBeforeRequest.addListener(
       ...instagramUrls,
       ...allInstancesArray,
     ],
+		types: ["main_frame"]
   },
   ["blocking"]
 );

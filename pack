@@ -1,0 +1,2 @@
+#!/bin/bash
+zip -r ../alter.zip * --exclude .git LICENSE README.md $0

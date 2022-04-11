@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      button {
+			.add-custom {
+				background: none;
+				border: none;
+				height: 1.3rem;
+				width: 1.3rem;
+				border: 1px solid black;
+				cursor: pointer;
+			}
+
+      .submit {
         margin: 1em 0 0 0.2em;
         padding: 0.4em 0.6em;
         border: none;
@@ -15,7 +24,7 @@
         cursor: pointer;
       }
 
-      button:hover {
+      .submit:hover {
         background-color: #333;
       }
 
@@ -24,29 +33,43 @@
         display: grid;
         place-items: center;
       }
+
+			fieldset input {
+				display: none;
+			}
     </style>
   </head>
   <body>
     <form>
       <fieldset>
         <legend>Nitter instances</legend>
-        <select id="nitter-instances" name="nitter-instances"></select>
+        <select id="nitter-instances" name="nitter-instance"></select>
+				<input name="nitter-instance" type="text" placeholder="Custom domain"> 
+				<button class='add-custom' type='button'>+</button>
       </fieldset>
       <fieldset>
         <legend>Teddit instances</legend>
         <select id="teddit-instances" name="teddit-instances"></select>
+				<input name="teddit-instance" type="text" placeholder="Custom domain"> 
+				<button class='add-custom' type='button'>+</button>
       </fieldset>
       <fieldset>
         <legend>Invidious instances</legend>
         <select id="invidious-instances" name="invidious-instances"></select>
+				<input name="invidious-instance" type="text" placeholder="Custom domain"> 
+				<button class='add-custom' type='button'>+</button>
       </fieldset>
       <fieldset>
         <legend>Bibliogram instances</legend>
         <select id="bibliogram-instances" name="bibliogram-instances"></select>
+				<input name="bibliogram-instance" type="text" placeholder="Custom domain"> 
+				<button class='add-custom' type='button'>+</button>
       </fieldset>
       <fieldset>
         <legend>Scribe instances</legend>
         <select id="scribe-instances" name="scribe-instances"></select>
+				<input name="scribe-instance" type="text" placeholder="Custom domain"> 
+				<button class='add-custom' type='button'>+</button>
       </fieldset>
       <div class="form-bottom">
         <label class="switch">

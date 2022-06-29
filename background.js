@@ -1,4 +1,4 @@
-const twitterUrls = ["*://twitter.com/*"];
+const twitterUrls = ["*://twitter.com/*", "*://mobile.twitter.com/*"];
 const redditUrls = ["*://reddit.com/*", "*://www.reddit.com/*"];
 const youtubeUrls = [
   "*://youtube.com/*",
@@ -64,7 +64,7 @@ function redirect(requestDetails) {
     const originalUrl = requestDetails.url;
     const originalDomain = getDomain(originalUrl);
 
-    const twitterRegex = /(https?):\/\/(twitter.com)\/(.*)/;
+    const twitterRegex = /(https?):\/\/(twitter.com|mobile.twitter.com)\/(.*)/;
     const redditRegex = /(https?):\/\/(reddit.com|www.reddit.com)\/(.*)/;
     const youtubeRegex =
       /(https?):\/\/(youtube.com|m.youtube.com|www.youtube.com|youtu.be)\/(.*)/;
@@ -212,7 +212,7 @@ browser.webRequest.onBeforeRequest.addListener(
       ...instagramUrls,
       ...allInstancesArray,
     ],
-		types: ["main_frame"]
+    types: ["main_frame"],
   },
   ["blocking"]
 );

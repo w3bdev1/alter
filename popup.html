@@ -3,76 +3,71 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./popup.css" type="text/css" media="all" />
     <title>Document</title>
-    <style>
-			.add-custom {
-				background: none;
-				border: none;
-				height: 1.3rem;
-				width: 1.3rem;
-				border: 1px solid black;
-				cursor: pointer;
-			}
-
-      .submit {
-        margin: 1em 0 0 0.2em;
-        padding: 0.4em 0.6em;
-        border: none;
-        background-color: black;
-        color: white;
-        font-weight: 700;
-        cursor: pointer;
-      }
-
-      .submit:hover {
-        background-color: #333;
-      }
-
-      .form-bottom {
-        padding-top: 1em;
-        display: grid;
-        place-items: center;
-      }
-
-			fieldset input {
-				display: none;
-			}
-    </style>
   </head>
   <body>
     <form>
       <fieldset>
         <legend>Nitter instances</legend>
         <select id="nitter-instances" name="nitter-instance"></select>
-				<input name="nitter-instance" type="text" placeholder="Custom domain"> 
-				<button class='add-custom' type='button'>+</button>
+        <input name="nitter-instance" type="text" placeholder="Custom domain" />
+        <button class="add-custom" type="button">+</button>
+        <label class="switch">
+          <input id="switch-nitter" type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
       </fieldset>
       <fieldset>
         <legend>Teddit instances</legend>
         <select id="teddit-instances" name="teddit-instances"></select>
-				<input name="teddit-instance" type="text" placeholder="Custom domain"> 
-				<button class='add-custom' type='button'>+</button>
+        <input name="teddit-instance" type="text" placeholder="Custom domain" />
+        <button class="add-custom" type="button">+</button>
+        <label class="switch">
+          <input id="switch-teddit" type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
       </fieldset>
       <fieldset>
         <legend>Invidious instances</legend>
         <select id="invidious-instances" name="invidious-instances"></select>
-				<input name="invidious-instance" type="text" placeholder="Custom domain"> 
-				<button class='add-custom' type='button'>+</button>
+        <input
+          name="invidious-instance"
+          type="text"
+          placeholder="Custom domain"
+        />
+        <button class="add-custom" type="button">+</button>
+        <label class="switch">
+          <input id="switch-invidious" type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
       </fieldset>
       <fieldset>
         <legend>Bibliogram instances</legend>
         <select id="bibliogram-instances" name="bibliogram-instances"></select>
-				<input name="bibliogram-instance" type="text" placeholder="Custom domain"> 
-				<button class='add-custom' type='button'>+</button>
+        <input
+          name="bibliogram-instance"
+          type="text"
+          placeholder="Custom domain"
+        />
+        <button class="add-custom" type="button">+</button>
+        <label class="switch">
+          <input id="switch-bibliogram" type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
       </fieldset>
       <fieldset>
         <legend>Scribe instances</legend>
         <select id="scribe-instances" name="scribe-instances"></select>
-				<input name="scribe-instance" type="text" placeholder="Custom domain"> 
-				<button class='add-custom' type='button'>+</button>
+        <input name="scribe-instance" type="text" placeholder="Custom domain" />
+        <button class="add-custom" type="button">+</button>
+        <label class="switch">
+          <input id="switch-scribe" type="checkbox" checked />
+          <span class="slider"></span>
+        </label>
       </fieldset>
       <div class="form-bottom">
-        <label class="switch">
+        <label>
           Disable Alter?
           <input id="disable" type="checkbox" />
         </label>

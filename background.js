@@ -43,6 +43,11 @@ let currentInstances = {
   scribe: "scribe.rip",
   bibliogram: "bibliogram.art",
   disable: false,
+  disable_nitter: false,
+  disable_teddit: false,
+  disable_invidious: false,
+  disable_scribe: false,
+  disable_bibliogram: false,
 };
 
 function replaceUrl(url, regex, newDomain) {
@@ -74,7 +79,7 @@ function redirect(requestDetails) {
     const instagramRegex = /https?:\/\/(www\.)?(instagram.com|instagr.am)\/.*/; // If not post, treat it as user
 
     // Twitter -> Nitter
-    if (twitterRegex.test(originalUrl)) {
+    if (!currentInstances.disable_nitter && twitterRegex.test(originalUrl)) {
       const newUrl = replaceUrl(
         originalUrl,
         twitterRegex,
@@ -85,7 +90,7 @@ function redirect(requestDetails) {
     }
 
     // Reddit -> Teddit
-    if (redditRegex.test(originalUrl)) {
+    if (!currentInstances.disable_teddit && redditRegex.test(originalUrl)) {
       const newUrl = replaceUrl(
         originalUrl,
         redditRegex,
@@ -97,7 +102,7 @@ function redirect(requestDetails) {
     }
 
     // YouTube -> Invidious
-    if (youtubeRegex.test(originalUrl)) {
+    if (!currentInstances.disable_invidious && youtubeRegex.test(originalUrl)) {
       const newUrl = replaceUrl(
         originalUrl,
         youtubeRegex,
@@ -108,7 +113,7 @@ function redirect(requestDetails) {
     }
 
     // Medium → Scribe
-    if (mediumRegex.test(originalUrl)) {
+    if (!currentInstances.disable_scribe && mediumRegex.test(originalUrl)) {
       const newUrl = originalUrl.replace(
         mediumRegex,
         `https://${currentInstances.scribe}$1`
@@ -118,22 +123,24 @@ function redirect(requestDetails) {
     }
 
     // Instagram → Bibliogram
-    if (instagramPostRegex.test(originalUrl)) {
-      const newUrl = originalUrl.replace(
-        /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
-        `https://${currentInstances.bibliogram}`
-      );
-      console.log("New URL ", newUrl);
-      return { redirectUrl: newUrl };
-    }
+    if (!currentInstances.disable_bibliogram) {
+      if (instagramPostRegex.test(originalUrl)) {
+        const newUrl = originalUrl.replace(
+          /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
+          `https://${currentInstances.bibliogram}`
+        );
+        console.log("New URL ", newUrl);
+        return { redirectUrl: newUrl };
+      }
 
-    if (instagramRegex.test(originalUrl)) {
-      const newUrl = originalUrl.replace(
-        /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
-        `https://${currentInstances.bibliogram}/u`
-      );
-      console.log("New URL ", newUrl);
-      return { redirectUrl: newUrl };
+      if (instagramRegex.test(originalUrl)) {
+        const newUrl = originalUrl.replace(
+          /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
+          `https://${currentInstances.bibliogram}/u`
+        );
+        console.log("New URL ", newUrl);
+        return { redirectUrl: newUrl };
+      }
     }
 
     // Other Instance -> Current Instance

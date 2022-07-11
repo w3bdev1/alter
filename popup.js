@@ -29,6 +29,26 @@ const data = {
     selected: "",
     isCustom: false,
   },
+  switch_nitter: {
+    el: document.getElementById("switch-nitter"),
+    isCustom: false,
+  },
+  switch_teddit: {
+    el: document.getElementById("switch-teddit"),
+    isCustom: false,
+  },
+  switch_invidious: {
+    el: document.getElementById("switch-invidious"),
+    isCustom: false,
+  },
+  switch_scribe: {
+    el: document.getElementById("switch-scribe"),
+    isCustom: false,
+  },
+  switch_bibliogram: {
+    el: document.getElementById("switch-bibliogram"),
+    isCustom: false,
+  },
 };
 
 function addEventHandlers() {
@@ -91,15 +111,36 @@ browser.runtime.sendMessage({ type: "bg_get_instances" }).then(
     const currentInstances = msgFromBg.currentInstances;
 
     for (let key of Object.keys(data)) {
-      if (key === "disable") {
-        data.disable.el.checked = currentInstances.disable;
-      } else {
-        instances[key].forEach((ins) => {
-          const option = createOption(ins, currentInstances[key] === ins, key);
-          data[key].el.appendChild(option);
-          data[key].selected = currentInstances[key];
-        });
-        data[key].el.appendChild(createOption("Other"));
+      switch (key) {
+        case "disable":
+          data[key].el.checked = currentInstances.disable;
+          break;
+        case "switch_nitter":
+          data[key].el.checked = !currentInstances.disable_nitter;
+          break;
+        case "switch_teddit":
+          data[key].el.checked = !currentInstances.disable_teddit;
+          break;
+        case "switch_invidious":
+          data[key].el.checked = !currentInstances.disable_invidious;
+          break;
+        case "switch_scribe":
+          data[key].el.checked = !currentInstances.disable_scribe;
+          break;
+        case "switch_bibliogram":
+          data[key].el.checked = !currentInstances.disable_bibliogram;
+          break;
+        default:
+          instances[key].forEach((ins) => {
+            const option = createOption(
+              ins,
+              currentInstances[key] === ins,
+              key
+            );
+            data[key].el.appendChild(option);
+            data[key].selected = currentInstances[key];
+          });
+          data[key].el.appendChild(createOption("Other"));
       }
     }
 
@@ -130,6 +171,11 @@ document.forms[0].onsubmit = (e) => {
     scribe: getInputValue(data.scribe.el),
     bibliogram: getInputValue(data.bibliogram.el),
     disable: data.disable.el.checked,
+    disable_nitter: !data.switch_nitter.el.checked,
+    disable_teddit: !data.switch_teddit.el.checked,
+    disable_invidious: !data.switch_invidious.el.checked,
+    disable_scribe: !data.switch_scribe.el.checked,
+    disable_bibliogram: !data.switch_bibliogram.el.checked,
   };
 
   const sending = browser.runtime.sendMessage({

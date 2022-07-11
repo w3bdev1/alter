@@ -1,0 +1,91 @@
+.add-custom {
+  background: none;
+  border: none;
+  height: 1.3rem;
+  width: 1.3rem;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.submit {
+  margin: 1em 0 0 0.2em;
+  padding: 0.4em 0.6em;
+  border: none;
+  background-color: black;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background-color: #333;
+}
+
+.form-bottom {
+  padding-top: 1em;
+  display: grid;
+  place-items: center;
+}
+
+fieldset input[type="text"] {
+  display: none;
+}
+
+fieldset {
+  position: relative;
+  min-width: 18rem;
+}
+
+/* Switch and Sliders */
+.switch {
+  --switch-height: 1rem;
+  --switch-width: 2rem;
+  --switch-padding-h: 0.2rem;
+  --switch-padding-v: 0.08rem;
+  --slider-diameter: calc(var(--switch-width) / 2 - var(--switch-padding-h));
+  --slider-transition: calc(
+    var(--switch-width) - var(--slider-diameter) - 2 * var(--switch-padding-h)
+  );
+  position: absolute;
+  right: 1rem;
+  top: 0.3rem;
+  display: inline-block;
+  width: var(--switch-width);
+  height: var(--switch-height);
+}
+
+.switch input {
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 0.5rem;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: var(--slider-diameter);
+  width: var(--slider-diameter);
+  left: var(--switch-padding-h);
+  top: var(--switch-padding-v);
+  border-radius: 50%;
+  background-color: #fff;
+  transition: 0.4s;
+}
+
+.switch input:checked + .slider {
+  background-color: #222;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(var(--slider-transition));
+}

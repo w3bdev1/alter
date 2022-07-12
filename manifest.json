@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Alter",
-  "version": "6.1",
+  "version": "7.0",
 
   "description": "Redirect to privacy-friendly alternatives",
   "permissions": ["webRequest", "webRequestBlocking", "<all_urls>", "storage"],

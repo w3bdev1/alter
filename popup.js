@@ -169,6 +169,7 @@ document.forms[0].onsubmit = (e) => {
     teddit: getInputValue(data.teddit.el),
     invidious: getInputValue(data.invidious.el),
     scribe: getInputValue(data.scribe.el),
+    quetre: getInputValue(data.quetre.el),
     disable: data.disable.el.checked,
     disable_nitter: !data.switch_nitter.el.checked,
     disable_teddit: !data.switch_teddit.el.checked,

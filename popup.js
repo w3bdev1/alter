@@ -19,8 +19,13 @@ const data = {
     selected: "",
     isCustom: true,
   },
-  bibliogram: {
-    el: document.getElementById("bibliogram-instances"),
+  quetre: {
+    el: document.getElementById("quetre-instances"),
+    selected: "",
+    isCustom: true,
+  },
+  osm: {
+    el: document.getElementById("osm-instances"),
     selected: "",
     isCustom: true,
   },
@@ -45,8 +50,12 @@ const data = {
     el: document.getElementById("switch-scribe"),
     isCustom: false,
   },
-  switch_bibliogram: {
-    el: document.getElementById("switch-bibliogram"),
+  switch_quetre: {
+    el: document.getElementById("switch-quetre"),
+    isCustom: false,
+  },
+  switch_osm: {
+    el: document.getElementById("switch-osm"),
     isCustom: false,
   },
 };
@@ -127,8 +136,11 @@ browser.runtime.sendMessage({ type: "bg_get_instances" }).then(
         case "switch_scribe":
           data[key].el.checked = !currentInstances.disable_scribe;
           break;
-        case "switch_bibliogram":
-          data[key].el.checked = !currentInstances.disable_bibliogram;
+        case "switch_quetre":
+          data[key].el.checked = !currentInstances.disable_quetre;
+          break;
+        case "switch_osm":
+          data[key].el.checked = !currentInstances.disable_osm;
           break;
         default:
           instances[key].forEach((ins) => {
@@ -169,13 +181,14 @@ document.forms[0].onsubmit = (e) => {
     teddit: getInputValue(data.teddit.el),
     invidious: getInputValue(data.invidious.el),
     scribe: getInputValue(data.scribe.el),
-    bibliogram: getInputValue(data.bibliogram.el),
+    quetre: getInputValue(data.quetre.el),
+    osm: getInputValue(data.osm.el),
     disable: data.disable.el.checked,
     disable_nitter: !data.switch_nitter.el.checked,
     disable_teddit: !data.switch_teddit.el.checked,
     disable_invidious: !data.switch_invidious.el.checked,
     disable_scribe: !data.switch_scribe.el.checked,
-    disable_bibliogram: !data.switch_bibliogram.el.checked,
+    disable_osm: !data.switch_osm.el.checked,
   };
 
   const sending = browser.runtime.sendMessage({

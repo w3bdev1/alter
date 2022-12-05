@@ -1,4 +1,5 @@
 const twitterUrls = ["*://twitter.com/*", "*://mobile.twitter.com/*"];
+const quoraUrls = ["*://www.quora.com/*", "*://quora.com/*"];
 const redditUrls = ["*://reddit.com/*", "*://www.reddit.com/*"];
 const youtubeUrls = [
   "*://youtube.com/*",
@@ -7,13 +8,6 @@ const youtubeUrls = [
   "*://youtu.be/*",
 ];
 const mediumUrls = ["*://medium.com/*", "*://*.medium.com/*"];
-const instagramUrls = [
-  "*://www.instagram.com/*",
-  "*://instagram.com/*",
-  "*://www.instagr.am/*",
-  "*://instagr.am/*",
-];
-
 const allInstances = {
   nitter: [
     "nitter.net",
@@ -24,11 +18,8 @@ const allInstances = {
   teddit: ["teddit.net", "teddit.ggc-project.de", "teddit.kavin.rocks"],
   invidious: ["invidious.snopyta.org", "yewtu.be"],
   scribe: ["scribe.rip", "scribe.nixnet.services", "scribe.citizen4.eu"],
-  bibliogram: [
-    "bibliogram.art",
-    "bibliogram.snopyta.org",
-    "bibliogram.pussthecat.org",
-  ],
+  quetre: ["quetre.iket.me", "quetre.vern.cc", "quetre.pussthecat.org"],
+  // quetre: ["quetre.odyssey346.dev", quetre.tokhmi.xyz, quetre.privacydev.net],
 };
 
 let allInstancesArray = [];
@@ -41,13 +32,13 @@ let currentInstances = {
   teddit: "teddit.net",
   invidious: "yewtu.be",
   scribe: "scribe.rip",
-  bibliogram: "bibliogram.art",
+  quetre: "quetre.iket.me",
   disable: false,
   disable_nitter: false,
   disable_teddit: false,
   disable_invidious: false,
   disable_scribe: false,
-  disable_bibliogram: false,
+  disable_quetre: false,
 };
 
 function replaceUrl(url, regex, newDomain) {
@@ -74,9 +65,7 @@ function redirect(requestDetails) {
     const youtubeRegex =
       /(https?):\/\/(youtube.com|m.youtube.com|www.youtube.com|youtu.be)\/(.*)/;
     const mediumRegex = /https?:\/\/(?:.*\.)*(?<!link\.)medium\.com(\/.*)?$/;
-    const instagramPostRegex =
-      /https?:\/\/(www\.)?(instagram.com|instagr.am)\/(p|tv)\/.*/;
-    const instagramRegex = /https?:\/\/(www\.)?(instagram.com|instagr.am)\/.*/; // If not post, treat it as user
+    const quoraRegex = /(https?):\/\/(quora.com|www.quora.com)\/(.*)/;
 
     // Twitter -> Nitter
     if (!currentInstances.disable_nitter && twitterRegex.test(originalUrl)) {
@@ -122,25 +111,15 @@ function redirect(requestDetails) {
       return { redirectUrl: newUrl };
     }
 
-    // Instagram → Bibliogram
-    if (!currentInstances.disable_bibliogram) {
-      if (instagramPostRegex.test(originalUrl)) {
-        const newUrl = originalUrl.replace(
-          /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
-          `https://${currentInstances.bibliogram}`
-        );
-        console.log("New URL ", newUrl);
-        return { redirectUrl: newUrl };
-      }
-
-      if (instagramRegex.test(originalUrl)) {
-        const newUrl = originalUrl.replace(
-          /https?:\/\/((www\.)?(instagram.com|instagr.am))/,
-          `https://${currentInstances.bibliogram}/u`
-        );
-        console.log("New URL ", newUrl);
-        return { redirectUrl: newUrl };
-      }
+    // Quora → Quetre
+    if (!currentInstances.disable_quetre && quoraRegex.test(originalUrl)) {
+      const newUrl = replaceUrl(
+        originalUrl,
+        quoraRegex,
+        currentInstances.quetre
+      );
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
     }
 
     // Other Instance -> Current Instance
@@ -216,7 +195,7 @@ browser.webRequest.onBeforeRequest.addListener(
       ...redditUrls,
       ...youtubeUrls,
       ...mediumUrls,
-      ...instagramUrls,
+      ...quoraUrls,
       ...allInstancesArray,
     ],
     types: ["main_frame"],

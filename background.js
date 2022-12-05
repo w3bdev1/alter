@@ -18,8 +18,7 @@ const allInstances = {
   teddit: ["teddit.net", "teddit.ggc-project.de", "teddit.kavin.rocks"],
   invidious: ["invidious.snopyta.org", "yewtu.be"],
   scribe: ["scribe.rip", "scribe.nixnet.services", "scribe.citizen4.eu"],
-  quetre: ["quetre.iket.me", "quetre.vern.cc", "quetre.pussthecat.org"],
-  // quetre: ["quetre.odyssey346.dev", quetre.tokhmi.xyz, quetre.privacydev.net],
+  quetre: ["quetre.iket.me", "quetre.odyssey346.dev"],
 };
 
 let allInstancesArray = [];

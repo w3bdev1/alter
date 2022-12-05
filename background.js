@@ -1,5 +1,6 @@
 const twitterUrls = ["*://twitter.com/*", "*://mobile.twitter.com/*"];
 const quoraUrls = ["*://www.quora.com/*", "*://quora.com/*"];
+const gmapsUrls= ["*://www.google.com/maps*", "*://google.com/maps*"];
 const redditUrls = ["*://reddit.com/*", "*://www.reddit.com/*"];
 const youtubeUrls = [
   "*://youtube.com/*",
@@ -19,6 +20,7 @@ const allInstances = {
   invidious: ["invidious.snopyta.org", "yewtu.be"],
   scribe: ["scribe.rip", "scribe.nixnet.services", "scribe.citizen4.eu"],
   quetre: ["quetre.iket.me", "quetre.vern.cc", "quetre.pussthecat.org"],
+  osm: ["openstreetmap.org"],
   // quetre: ["quetre.odyssey346.dev", quetre.tokhmi.xyz, quetre.privacydev.net],
 };
 
@@ -33,12 +35,14 @@ let currentInstances = {
   invidious: "yewtu.be",
   scribe: "scribe.rip",
   quetre: "quetre.iket.me",
+  osm: "openstreetmap.org",
   disable: false,
   disable_nitter: false,
   disable_teddit: false,
   disable_invidious: false,
   disable_scribe: false,
   disable_quetre: false,
+  disable_osm: false,
 };
 
 function replaceUrl(url, regex, newDomain) {
@@ -66,6 +70,7 @@ function redirect(requestDetails) {
       /(https?):\/\/(youtube.com|m.youtube.com|www.youtube.com|youtu.be)\/(.*)/;
     const mediumRegex = /https?:\/\/(?:.*\.)*(?<!link\.)medium\.com(\/.*)?$/;
     const quoraRegex = /(https?):\/\/(quora.com|www.quora.com)\/(.*)/;
+    const gmapsRegex = /(https?):\/\/(google.com\/maps\?hl=en&q=|www.google.com\/maps\?hl=en&q=)(.*)/;
 
     // Twitter -> Nitter
     if (!currentInstances.disable_nitter && twitterRegex.test(originalUrl)) {
@@ -117,6 +122,17 @@ function redirect(requestDetails) {
         originalUrl,
         quoraRegex,
         currentInstances.quetre
+      );
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
+    }
+
+    // Gmaps → OSM
+    if (!currentInstances.disable_osm && gmapsRegex.test(originalUrl)) {
+      const newUrl = replaceUrl(
+        originalUrl,
+        gmapsRegex,
+        `${currentInstances.osm}/search?query=`
       );
       console.log("New URL ", newUrl);
       return { redirectUrl: newUrl };
@@ -196,6 +212,7 @@ browser.webRequest.onBeforeRequest.addListener(
       ...youtubeUrls,
       ...mediumUrls,
       ...quoraUrls,
+      ...gmapsUrls,
       ...allInstancesArray,
     ],
     types: ["main_frame"],

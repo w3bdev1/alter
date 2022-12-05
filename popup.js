@@ -24,6 +24,11 @@ const data = {
     selected: "",
     isCustom: true,
   },
+  osm: {
+    el: document.getElementById("osm-instances"),
+    selected: "",
+    isCustom: true,
+  },
   disable: {
     el: document.getElementById("disable"),
     selected: "",
@@ -47,6 +52,10 @@ const data = {
   },
   switch_quetre: {
     el: document.getElementById("switch-quetre"),
+    isCustom: false,
+  },
+  switch_osm: {
+    el: document.getElementById("switch-osm"),
     isCustom: false,
   },
 };
@@ -130,6 +139,9 @@ browser.runtime.sendMessage({ type: "bg_get_instances" }).then(
         case "switch_quetre":
           data[key].el.checked = !currentInstances.disable_quetre;
           break;
+        case "switch_osm":
+          data[key].el.checked = !currentInstances.disable_osm;
+          break;
         default:
           instances[key].forEach((ins) => {
             const option = createOption(
@@ -170,12 +182,13 @@ document.forms[0].onsubmit = (e) => {
     invidious: getInputValue(data.invidious.el),
     scribe: getInputValue(data.scribe.el),
     quetre: getInputValue(data.quetre.el),
+    osm: getInputValue(data.osm.el),
     disable: data.disable.el.checked,
     disable_nitter: !data.switch_nitter.el.checked,
     disable_teddit: !data.switch_teddit.el.checked,
     disable_invidious: !data.switch_invidious.el.checked,
     disable_scribe: !data.switch_scribe.el.checked,
-    disable_quetre: !data.switch_quetre.el.checked,
+    disable_osm: !data.switch_osm.el.checked,
   };
 
   const sending = browser.runtime.sendMessage({

@@ -40,8 +40,15 @@ let currentInstances = {
   disable_quetre: false,
 };
 
-function replaceUrl(url, regex, newDomain) {
-  return url.replace(regex, `$1://${newDomain}/$3`);
+function replaceUrl(url, regex, newDomain, fixMissingWatch = false) {
+  if (fixMissingWatch) {
+    console.log("No /watch/ in URL - fixing");
+    return url.replace(regex, `$1://${newDomain}/watch/$3`);
+  }
+  else
+  {
+    return url.replace(regex, `$1://${newDomain}/$3`);
+  }
 }
 
 function getDomain(url) {
@@ -61,8 +68,8 @@ function redirect(requestDetails) {
 
     const twitterRegex = /(https?):\/\/(twitter.com|mobile.twitter.com)\/(.*)/;
     const redditRegex = /(https?):\/\/(reddit.com|www.reddit.com)\/(.*)/;
-    const youtubeRegex =
-      /(https?):\/\/(youtube.com|m.youtube.com|www.youtube.com|youtu.be)\/(.*)/;
+    const youtubeRegex = /(https?):\/\/(youtube.com|m.youtube.com|www.youtube.com)\/(.*)/;
+    const youtubeShortRegex = /(https?):\/\/(youtu.be)\/(.*)\?(feature=shared|)/;
     const mediumRegex = /https?:\/\/(?:.*\.)*(?<!link\.)medium\.com(\/.*)?$/;
     const quoraRegex = /(https?):\/\/(quora.com|www.quora.com)\/(.*)/;
 
@@ -100,6 +107,20 @@ function redirect(requestDetails) {
       return { redirectUrl: newUrl };
     }
 
+    // YouTube Short -> Invidious
+    // e.g. for https://youtu.be/IDENTIFIER?feature=shared
+    if (!currentInstances.disable_invidious && youtubeShortRegex.test(originalUrl)) {
+      console.log("Original URL ", originalUrl);
+      const newUrl = replaceUrl(
+        originalUrl,
+        youtubeShortRegex,
+        currentInstances.invidious,
+        true
+      );
+      console.log("New URL ", newUrl);
+      return { redirectUrl: newUrl };
+    }
+    
     // Medium → Scribe
     if (!currentInstances.disable_scribe && mediumRegex.test(originalUrl)) {
       const newUrl = originalUrl.replace(

@@ -1,3 +1,11 @@
+# Archived 🔒
+- This repo is closed for 2 major reasons:
+  1. I have lost 2FA credentials to log into my Mozilla account. So there is no possibility for future updates.
+  2. The project requires a complete overhaul. Further patches will complicate it unnecessarily.
+- I hope `Alter` was able to provide some value.
+
+<hr>
+
 # Alter
 - It is a browser extension, currently available for [Firefox](https://addons.mozilla.org/addon/alter/).
 - Alter tries to redirect you to privacy-friendly alternatives.
@@ -21,8 +29,3 @@
 *After update, some redirections are showing undefined. What to do?*
 - When new redirection feature is added, no instance is saved for the new feature. So alter does not know where to redirect.
 - Click on the Alter icon and submit the form once. You'll be good to go.
-
-### Support Me
-If you find my work useful, consider donating so that I can continue to contribute.
-You can donate by [buying me a coffee](https://www.buymeacoffee.com/w3bdev).
-<a href="https://www.buymeacoffee.com/w3bdev" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
